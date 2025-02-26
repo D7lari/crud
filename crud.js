@@ -76,6 +76,11 @@ function renderList(produtosTecnologia) {
       <td>${produtosTecnologia[index].nome}</td>
       <td>${produtosTecnologia[index].preco}</td>
       <td>${produtosTecnologia[index].marca}</td>
+      <td>
+        <button class="btn btn-warning" onclick="renderModalEditar()">Edita</button>
+        <button type="button"onclick="deletarProdutos(${produtosTecnologia[index].id})" class="btn btn-danger">Deletar</button>
+      </td>
+
     </tr>
         `
     }
@@ -112,7 +117,7 @@ function renderModal() {
     body.appendChild(div)
 }
 
-function removerModalCreate() {
+function removerModal() {
     let modal = document.querySelector(".modal-overlay")
     body.removeChild(modal)
 }
@@ -125,35 +130,79 @@ function cadastrarProdutos() {
     let marca = document.querySelector("#inputMarca").value
 
     produtosTecnologia.push({
-        id:produtosTecnologia.length +1,
-        nome:nome,
-        categoria:categoria,
-        preco:preco,
-        marca:marca
+        id: produtosTecnologia.length + 1,
+        nome: nome,
+        categoria: categoria,
+        preco: preco,
+        marca: marca
 
     })
     tbody.innerHTML = ""
     renderList(produtosTecnologia)
-    removerModalCreate()
+    removerModal()
 
 }
 
 function editarProdutos() {
-    let id = document.querySelector("#inputId").value
-    let nome = document.querySelector("#inputNome").value
-    let categoria = document.querySelector("#inputCategoria").value
-    let preco = document.querySelector("#inputPreco").value
-    let marca = document.querySelector("#inputMarca").value
+    let id = document.querySelector("#editId").value
+    let nome = document.querySelector("#editNome").value
+    let categoria = document.querySelector("#editCategoria").value
+    let preco = document.querySelector("#editPreco").value
+    let marca = document.querySelector("#editMarca").value
 
-    let index = produtosTecnologia.findIndex( () => {})
+    let index = produtosTecnologia.findIndex(item => item.id == id)
+    console.log(produtosTecnologia[index]);
+    produtosTecnologia[index] = {
+        id: id,
+        nome: nome,
+        categoria: categoria,
+        preco: preco,
+        marca: marca
+    }
 
+    tbody.innerHTML = ""
+    renderList(produtosTecnologia)
+    removerModal()
 
-    produtosTecnologia[index]({
-        id:id,
-        nome:nome,
-        categoria:categoria,
-        preco:preco,
-        marca:marca
-    })
+}
 
+function renderModalEditar() {
+    let div = document.createElement("div")
+    div.classList.add("modal-overlay")
+    div.innerHTML = `
+        <div id="editModal" class="modal-content">
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editId" aria-describedby="emailHelp" placeholder="Digite seu Id">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editNome" aria-describedby="emailHelp" placeholder="Digite seu nome">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editCategoria" aria-describedby="emailHelp" placeholder="Digite sua categoria">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editPreco" aria-describedby="emailHelp" placeholder="Digite seu preço">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="editMarca" aria-describedby="emailHelp" placeholder="Digite sua marca">
+                </div>
+                    <button type="button" onclick="editarProdutos()" class="btn btn-primary">Enviar</button>
+                    <button type="button" onclick="removerModal()" class="btn btn-primary">Remover</button>
+            </form>
+        </div>
+`
+    body.appendChild(div)
+}
+
+function removerModal() {
+    let modal = document.querySelector(".modal-overlay")
+    body.removeChild(modal)
+}
+
+function deletarProdutos(id) {
+    let index = produtosTecnologia.findIndex( item => item.id == id)
+    produtosTecnologia.splice(index,1)
+    tbody.innerHTML = ""
+    renderList(produtosTecnologia)
 }
